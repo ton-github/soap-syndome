@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register CM</title>
+  </head>
+  <body>
+    <form id="register">
+      <!--- section 1-->
+      <h1>ข้อมูลสินค้า</h1>
+      <label for="crmSerial">serial no:</label>
+      <input type="text" id="crmSerial" name="crmSerial" /><br /><br />
+
+      <label for="crmModelId">รุ่นผลิตภัณฑ์</label>
+      <select id="crmModelId" name="crmModelId">
+        <option disabled selected>กรุณาเลือก</option>
+      </select>
+      <br /><br />
+
+      <!--- section 2-->
+      <h1>อาการเสีย</h1>
+      <label for="cmoRptId">อาการเสีย</label>
+      <select id="cmoRptId" name="cmoRptId">
+        <option disabled selected>กรุณาเลือก</option></select
+      ><br /><br />
+      <label for="cmoRepairAdditional">รายละเอียดเพิ่มเติม:</label>
+      <input type="text" id="cmoRepairAdditional" name="cmoRepairAdditional" /><br /><br />
+
+      <label>
+        <input type="checkbox" id="cmoMoreOne" />
+        มากกว่า 1 เครื่อง
+      </label>
+
+      <!--- section 3-->
+      <h1>รายละเอียด</h1>
+      <label>
+        <input type="radio" name="crmPerson" value="1" checked />
+        นิติบุคคล
+      </label>
+      <label>
+        <input type="radio" name="crmPerson" value="2" />
+        บุคคลธรรมดา
+      </label>
+      <br /><br />
+
+      <label for="crmTitleId">คํานําหน้า</label>
+      <select id="crmTitleId" name="crmTitleId">
+        <option disabled selected>กรุณาเลือก</option>
+      </select>
+      <br /><br />
+
+      <label for="crmNameTh">ชื่อ</label>
+      <input type="text" id="crmNameTh" name="crmNameTh" /><br /><br />
+
+      <label for="crmTel">เบอร์โทรศัพท์</label>
+      <input type="text" id="crmTel" name="crmTel" /><br /><br />
+
+      <label for="cmoOfficeTel">เบอร์โทรศัพท์สำนักงาน</label>
+      <input type="text" id="cmoOfficeTel" name="cmoOfficeTel" /><br /><br />
+
+      <label for="crmEmail">อีเมล</label>
+      <input type="text" id="crmEmail" name="crmEmail" /><br /><br />
+
+      <label for="crmAddressNo">บ้านเลขที่</label>
+      <input type="text" id="crmAddressNo" name="crmAddressNo" /><br /><br />
+
+      <label for="crmVillage">หมู่บ้าน/อาคาร/คอนโด</label>
+      <input type="text" id="crmVillage" name="villcrmVillageage" /><br /><br />
+
+      <label for="crmSoi">ซอย</label>
+      <input type="text" id="crmSoi" name="crmSoi" /><br /><br />
+
+      <label for="crmRoad">ถนน</label>
+      <input type="text" id="crmRoad" name="crmRoad" /><br /><br />
+
+      <label for="crmProvinceCode">จังหวัด</label>
+      <select id="crmProvinceCode" name="crmProvinceCode" onchange="getDistrict()">
+        <option disabled selected>กรุณาเลือก</option>
+      </select>
+      <br /><br />
+
+      <label for="crmDistrictCode">เขต/อำเภอ</label>
+      <select id="crmDistrictCode" name="crmDistrictCode" onchange="getSubDistrict()">
+        <option disabled selected>กรุณาเลือก</option>
+      </select>
+      <br /><br />
+
+      <label for="crmSubdistrictCode">แขวง/ตำบล</label>
+      <select id="crmSubdistrictCode" name="crmSubdistrictCode" onchange="getZipCode()">
+        <option disabled selected>กรุณาเลือก</option>
+      </select>
+      <br /><br />
+
+      <label for="crmPostalCode">รหัสไปรษณีย์</label>
+      <input type="text" id="crmPostalCode" name="crmPostalCode" /><br /><br />
+
+      <!-- <input type="submit" value="Submit" /> -->
+    </form>
+    <button onclick="submitForm()">Check</button>
+
+    <!-- script part-->
+    <script>
+      // get data from soap api
+      getModel()
+      getProvince()
+      getPrefix()
+      getRepairType()
+
+      function getRepairType() {
+        const xhr = new XMLHttpRequest()
+        xhr.open('POST', 'http://192.168.10.250/bpmws/BPMSaleOrderService?wsdl')
+        xhr.setRequestHeader('Content-Type', 'text/xml;charset=UTF-8')
+        const soapBody =
+          '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bpm="http://bpmws/">' +
+          '<soapenv:Header/>' +
+          '<soapenv:Body>' +
+          '<bpm:BPM_TargetApplication_RepairTypeList/>' +
+          '</soapenv:Body>' +
+          '</soapenv:Envelope>'
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            const xmlDoc = this.responseXML
+            // console.log(xmlDoc)
+            const result = xmlDoc.getElementsByTagName('repairTypeList')
+            const selectModel = document.getElementById('cmoRptId')
+            for (let i = 0; i < result.length; i++) {
+              const items = result[i].childNodes
+              const optionElement = document.createElement('option')
+              optionElement.textContent = items[1].innerHTML
+              optionElement.value = items[2].innerHTML
+              selectModel.appendChild(optionElement)
+            }
+          }
+        }
+        xhr.send(soapBody)
+      }
+
+      function getModel() {
+        const xhr = new XMLHttpRequest()
+        xhr.open('POST', 'http://192.168.10.250/bpmws/BPMSaleOrderService?wsdl')
+        xhr.setRequestHeader('Content-Type', 'text/xml;charset=UTF-8')
+        const soapBody =
+          '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bpm="http://bpmws/">' +
+          '<soapenv:Header/>' +
+          '<soapenv:Body>' +
+          '<bpm:BPM_TargetApplication_ModelList/>' +
+          '</soapenv:Body>' +
+          '</soapenv:Envelope>'
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            const xmlDoc = this.responseXML
+            const result = xmlDoc.getElementsByTagName('crmModelList')
+            const selectModel = document.getElementById('crmModelId')
+            for (let i = 0; i < result.length; i++) {
+              const items = result[i].childNodes
+              const optionElement = document.createElement('option')
+              optionElement.textContent = items[2].innerHTML
+              optionElement.value = items[1].innerHTML
+              selectModel.appendChild(optionElement)
+            }
+            // xhr.abort()
+          }
+        }
+        xhr.send(soapBody)
+      }
+
+      function getProvince() {
+        const xhr = new XMLHttpRequest()
+        xhr.open('POST', 'http://192.168.10.250/bpmws/BPMSaleOrderService?wsdl')
+        xhr.setRequestHeader('Content-Type', 'text/xml;charset=UTF-8')
+        const soapBody =
+          '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bpm="http://bpmws/">' +
+          '<soapenv:Header/>' +
+          '<soapenv:Body>' +
+          '<bpm:BPM_TargetApplication_ProvinceList/>' +
+          '</soapenv:Body>' +
+          '</soapenv:Envelope>'
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            const xmlDoc = this.responseXML
+            // console.log(xmlDoc)
+            const result = xmlDoc.getElementsByTagName('provinceList')
+            const selectModel = document.getElementById('crmProvinceCode')
+            for (let i = 0; i < result.length; i++) {
+              const items = result[i].childNodes
+              const optionElement = document.createElement('option')
+              optionElement.textContent = items[3].innerHTML
+              optionElement.value = items[0].innerHTML
+              selectModel.appendChild(optionElement)
+            }
+          }
+        }
+        xhr.send(soapBody)
+      }
+
+      function getPrefix() {
+        const xhr = new XMLHttpRequest()
+        xhr.open('POST', 'http://192.168.10.250/bpmws/BPMSaleOrderService?wsdl')
+        xhr.setRequestHeader('Content-Type', 'text/xml;charset=UTF-8')
+        const soapBody =
+          '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bpm="http://bpmws/">' +
+          '<soapenv:Header/>' +
+          '<soapenv:Body>' +
+          '<bpm:BPM_TargetApplication_TitleList/>' +
+          '</soapenv:Body>' +
+          '</soapenv:Envelope>'
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            const xmlDoc = this.responseXML
+            // console.log(xmlDoc)
+            const result = xmlDoc.getElementsByTagName('titleList')
+            const selectModel = document.getElementById('crmTitleId')
+            for (let i = 0; i < result.length; i++) {
+              const items = result[i].childNodes
+              const optionElement = document.createElement('option')
+              optionElement.textContent = items[3].innerHTML
+              optionElement.value = items[1].innerHTML
+              selectModel.appendChild(optionElement)
+            }
+          }
+        }
+        xhr.send(soapBody)
+      }
+
+      function getDistrict() {
+        const districtSelect = document.getElementById('crmDistrictCode')
+        districtSelect.innerHTML = '<option disabled selected>กรุณาเลือก</option>'
+        const xhr = new XMLHttpRequest()
+        xhr.open('POST', 'http://192.168.10.250/bpmws/BPMSaleOrderService?wsdl')
+        xhr.setRequestHeader('Content-Type', 'text/xml;charset=UTF-8')
+        const selectedProvince = document.getElementById('crmProvinceCode').value
+        const soapBody =
+          '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bpm="http://bpmws/">' +
+          '<soapenv:Header/>' +
+          '<soapenv:Body>' +
+          '<bpm:BPM_TargetApplication_SearchGeo>' +
+          '<!--Optional:-->' +
+          '<geo>province</geo>' +
+          '<!--Optional:-->' +
+          '<target>district</target>' +
+          '<!--Optional:-->' +
+          '<code>' +
+          selectedProvince +
+          '</code>' +
+          '</bpm:BPM_TargetApplication_SearchGeo>' +
+          '</soapenv:Body>' +
+          '</soapenv:Envelope>'
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            const xmlDoc = this.responseXML
+            // console.log(xmlDoc)
+            const result = xmlDoc.getElementsByTagName('commonList')
+            const select = document.getElementById('crmDistrictCode')
+            for (let i = 0; i < result.length; i++) {
+              const items = result[i].childNodes
+              const optionElement = document.createElement('option')
+              optionElement.textContent = items[1].innerHTML
+              optionElement.value = items[0].innerHTML
+              select.appendChild(optionElement)
+            }
+          }
+        }
+        xhr.send(soapBody)
+      }
+
+      function getSubDistrict() {
+        const selectedValue = document.getElementById('crmDistrictCode').value
+        const districtSelect = document.getElementById('crmSubdistrictCode')
+        districtSelect.innerHTML = '<option disabled selected>กรุณาเลือก</option>'
+        if (!selectedValue) return
+
+        const xhr = new XMLHttpRequest()
+        xhr.open('POST', 'http://192.168.10.250/bpmws/BPMSaleOrderService?wsdl')
+        xhr.setRequestHeader('Content-Type', 'text/xml;charset=UTF-8')
+
+        const soapBody =
+          '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bpm="http://bpmws/">' +
+          '<soapenv:Header/>' +
+          '<soapenv:Body>' +
+          '<bpm:BPM_TargetApplication_SearchGeo>' +
+          '<!--Optional:-->' +
+          '<geo>district</geo>' +
+          '<!--Optional:-->' +
+          '<target>subdistrict</target>' +
+          '<!--Optional:-->' +
+          '<code>' +
+          selectedValue +
+          '</code>' +
+          '</bpm:BPM_TargetApplication_SearchGeo>' +
+          '</soapenv:Body>' +
+          '</soapenv:Envelope>'
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            const xmlDoc = this.responseXML
+            const result = xmlDoc.getElementsByTagName('commonList')
+            const select = document.getElementById('crmSubdistrictCode')
+            for (let i = 0; i < result.length; i++) {
+              const items = result[i].childNodes
+              const optionElement = document.createElement('option')
+              optionElement.textContent = items[1].innerHTML
+              optionElement.value = items[0].innerHTML
+              select.appendChild(optionElement)
+            }
+          }
+        }
+        xhr.send(soapBody)
+      }
+
+      function getZipCode() {
+        const selectedValue = document.getElementById('crmSubdistrictCode').value
+        const zipcode = document.getElementById('crmPostalCode')
+        zipcode.value = ''
+        if (!selectedValue) return
+        const xhr = new XMLHttpRequest()
+        xhr.open('POST', 'http://192.168.10.250/bpmws/BPMSaleOrderService?wsdl')
+        xhr.setRequestHeader('Content-Type', 'text/xml;charset=UTF-8')
+
+        const soapBody =
+          '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bpm="http://bpmws/">' +
+          '<soapenv:Header/>' +
+          '<soapenv:Body>' +
+          '<bpm:BPM_TargetApplication_GetZipcode>' +
+          '<!--Optional:-->' +
+          '<geo>subdistrict</geo>' +
+          '<!--Optional:-->' +
+          '<code>' +
+          selectedValue +
+          '</code>' +
+          '</bpm:BPM_TargetApplication_GetZipcode>' +
+          '</soapenv:Body>' +
+          '</soapenv:Envelope>'
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            const xmlDoc = this.responseXML
+            const result = xmlDoc.getElementsByTagName('postCode')
+            zipcode.value = result[0].innerHTML
+          }
+        }
+        xhr.send(soapBody)
+      }
+
+      function submitForm() {
+        console.log('pressBTN')
+        const crmSerial = document.getElementById('crmSerial').value
+        const crmNameTh = document.getElementById('crmNameTh').value
+        const crmTel = document.getElementById('crmTel').value
+        const crmEmail = document.getElementById('crmEmail').value
+        const crmAddressNo = document.getElementById('crmAddressNo').value
+        const crmVillage = document.getElementById('crmVillage').value
+        const crmSoi = document.getElementById('crmSoi').value
+        const crmRoad = document.getElementById('crmRoad').value
+        const crmPostalCode = document.getElementById('crmPostalCode').value
+        const crmModelId = document.getElementById('crmModelId').value
+        const crmTitleId = document.getElementById('crmTitleId').value
+        const crmProvinceCode = document.getElementById('crmProvinceCode').value
+        const crmDistrictCode = document.getElementById('crmDistrictCode').value
+        const crmSubdistrictCode = document.getElementById('crmSubdistrictCode').value
+
+        const cmoRptId = document.getElementById('cmoRptId').value
+        const cmoRepairAdditional = document.getElementById('cmoRptId').value
+        const cmoMoreOne = document.getElementById('cmoMoreOne').checked ? '1' : '0'
+        const cmoOfficeTel = document.getElementById('cmoOfficeTel').value
+
+        let crmPerson = 1
+        const radioButtons = document.getElementsByName('crmPerson')
+        for (let i = 0; i < radioButtons.length; i++) {
+          if (radioButtons[i].checked) {
+            crmPerson = radioButtons[i].value
+          }
+        }
+
+        const xhr = new XMLHttpRequest()
+        xhr.open('POST', 'http://192.168.10.250/bpmws/BPMSaleOrderService?wsdl')
+        xhr.setRequestHeader('Content-Type', 'text/xml;charset=UTF-8')
+        const soapBody =
+          '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bpm="http://bpmws/">' +
+          '<soapenv:Header/>' +
+          '<soapenv:Body>' +
+          '<bpm:BPM_TargetApplication_AddRegisterCmOnline>' +
+          '<!--Optional:-->' +
+          '<crmCmOnlineBean>' +
+          '<!--Optional:-->' +
+          '<cmoAddressNo>' +
+          crmAddressNo +
+          '</cmoAddressNo>' +
+          '<cmoDistrictCode>' +
+          crmDistrictCode +
+          '</cmoDistrictCode>' +
+          '<cmoEmail>' +
+          crmEmail +
+          '</cmoEmail>' +
+          '<cmoModelId>' +
+          crmModelId +
+          '</cmoModelId>' +
+          '<cmoMoreOne>' +
+          cmoMoreOne +
+          '</cmoMoreOne>' +
+          '<cmoNameTh>' +
+          crmNameTh +
+          '</cmoNameTh>' +
+          '<cmoOfficeTel>' +
+          cmoOfficeTel +
+          '</cmoOfficeTel>' +
+          // '<cmoOpnion>1,2,4</cmoOpnion>' +
+          // '<cmoOrganization>test222</cmoOrganization>' +
+          '<cmoPerson>' +
+          crmPerson +
+          '</cmoPerson>' +
+          '<cmoPostalCode>' +
+          crmPostalCode +
+          '</cmoPostalCode>' +
+          '<cmoProvinceCode>' +
+          crmProvinceCode +
+          '</cmoProvinceCode>' +
+          '<cmoRepairAdditional>' +
+          cmoRepairAdditional +
+          '</cmoRepairAdditional>' +
+          '<cmoRoad>' +
+          crmRoad +
+          '</cmoRoad>' +
+          '<cmoRptId>' +
+          cmoRptId +
+          '</cmoRptId>' +
+          '<cmoSerial>' +
+          crmSerial +
+          '</cmoSerial>' +
+          '<cmoSoi>' +
+          crmSoi +
+          '</cmoSoi>' +
+          '<cmoSubdistrictCode>' +
+          crmSubdistrictCode +
+          '</cmoSubdistrictCode>' +
+          '<cmoTel>' +
+          crmTel +
+          '</cmoTel>' +
+          '<cmoVillage>' +
+          crmVillage +
+          '</cmoVillage>' +
+          '</crmCmOnlineBean>' +
+          '</bpm:BPM_TargetApplication_AddRegisterCmOnline>' +
+          '</soapenv:Body>' +
+          '</soapenv:Envelope>'
+
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            const xmlDoc = this.responseXML
+            const msgStatus = xmlDoc.getElementsByTagName('msgStatus')[0].innerHTML
+            if (msgStatus === 'FAIL') {
+              alert(msgStatus)
+            } else {
+              alert(xmlDoc.getElementsByTagName('message')[0].innerHTML)
+            }
+          }
+        }
+        xhr.send(soapBody)
+      }
+    </script>
+  </body>
+</html>

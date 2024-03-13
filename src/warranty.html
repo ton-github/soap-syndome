@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Check warranty online</title>
+  </head>
+  <body>
+    <h1>Check warranty online</h1>
+    <label for="serialInput">serial no:</label>
+    <input type="text" id="serialInput" name="serialInput" />
+    <button onclick="pressBTN()">Check</button>
+    <table id="warrantyTable" border="1">
+      <thead>
+        <tr>
+          <th>Serial</th>
+          <th>Detail</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Warranty</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+
+    <script>
+      function pressBTN() {
+        const serialNumber = document.getElementById('serialInput')
+        const xhr = new XMLHttpRequest()
+        xhr.open('POST', 'http://192.168.10.250/bpmws/BPMSaleOrderService?wsdl')
+        xhr.setRequestHeader('Content-Type', 'text/xml;charset=UTF-8')
+        const soapBody =
+          '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bpm="http://bpmws/">' +
+          '<soapenv:Header/>' +
+          '<soapenv:Body>' +
+          '<bpm:BPM_TargetApplication_CheckWarranty>' +
+          '<serial>' +
+          serialNumber.value +
+          '</serial>' +
+          '</bpm:BPM_TargetApplication_CheckWarranty>' +
+          '</soapenv:Body>' +
+          '</soapenv:Envelope>'
+
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            const xmlDoc = this.responseXML
+            const result = xmlDoc.getElementsByTagName('resultSerialDetail')
+            const tableBody = document.getElementById('tableBody')
+            const row = document.createElement('tr')
+            ;[0, 9, 14, 12, 18].forEach((field) => {
+              const cell = document.createElement('td')
+              if (field === 0) {
+                cell.textContent = 'SN-' + result[0].childNodes[field].innerHTML
+              } else if (field === 18) {
+                cell.textContent =
+                  result[0].childNodes[18].innerHTML +
+                  ' ปี ' +
+                  result[0].childNodes[17].innerHTML +
+                  ' เดือน ' +
+                  result[0].childNodes[16].innerHTML +
+                  ' วัน '
+              } else {
+                cell.textContent = result[0].childNodes[field].innerHTML
+              }
+              row.appendChild(cell)
+              tableBody.appendChild(row)
+            })
+          }
+        }
+        xhr.send(soapBody)
+      }
+    </script>
+  </body>
+</html>

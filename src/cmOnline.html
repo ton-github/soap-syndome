@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Check cm online</title>
+  </head>
+  <body>
+    <h1>Check cm online</h1>
+    <label for="serialInput">serial no:</label>
+    <input type="text" id="serialInput" name="serialInput" />
+    <button onclick="pressBTN()">Check</button>
+    <h2 id="title"></h2>
+    <p id="date"></p>
+    <p id="center"></p>
+    <h2 id="status"></h2>
+    <div id="container"></div>
+
+    <script>
+      function pressBTN() {
+        // 220704030530151
+        console.log('PRESS')
+        const serialNumber = document.getElementById('serialInput')
+        const xhr = new XMLHttpRequest()
+        xhr.open('POST', 'http://192.168.10.250/bpmws/BPMSaleOrderService?wsdl')
+        xhr.setRequestHeader('Content-Type', 'text/xml;charset=UTF-8')
+        const soapBody =
+          '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bpm="http://bpmws/">' +
+          '<soapenv:Header/>' +
+          '<soapenv:Body>' +
+          '<bpm:BPM_TargetApplication_CheckCmSerial>' +
+          '<!--Optional:-->' +
+          '<serial>' +
+          serialNumber.value +
+          '</serial>' +
+          '</bpm:BPM_TargetApplication_CheckCmSerial>' +
+          '</soapenv:Body>' +
+          '</soapenv:Envelope>'
+
+        xhr.onreadystatechange = function () {
+          console.log('state change')
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            const xmlDoc = this.responseXML
+            const status = xmlDoc.getElementsByTagName('cmStatus')[0].innerHTML
+            const groupType = xmlDoc.getElementsByTagName('maGroup')[0].innerHTML
+            const center = xmlDoc.getElementsByTagName('centerName')[0].innerHTML
+            const date = xmlDoc.getElementsByTagName('appRecDateStr')[0].innerHTML
+            const list = xmlDoc.getElementsByTagName('cmOrderList')
+            document.getElementById('title').innerText = 'ทีมช่างบริการ'
+            document.getElementById('date').innerText = date
+            document.getElementById('center').innerText = center
+            document.getElementById('status').innerText = 'สถานะ'
+
+            const groupTypeTitle = {
+              PP: 'ทีมช่างเข้าบริการ',
+              PS: 'รอเสนอราคา',
+              PC: 'อยู่ในขั้นตอนการซ่อม',
+              PV: 'กําลังดําเนินการส่งสินค้า',
+              S: 'เสร็จสิ้น',
+            }
+
+            const groupTypeTitle2 = {
+              PP: 'ทีมช่างเข้าบริการ',
+              PC: 'อยู่ในขั้นตอนการซ่อม',
+              PV: 'กําลังดําเนินการส่งสินค้า',
+              S: 'เสร็จสิ้น',
+            }
+            // version 1
+            const items = groupType === '1' ? groupTypeTitle2 : groupTypeTitle
+            for (let i = 0; i < Object.values(items).length; i++) {
+              const newParagraph = document.createElement('p')
+              newParagraph.textContent = Object.values(items)[i]
+              console.log(status)
+              if (status === Object.keys(items)[i]) {
+                newParagraph.style.color = 'green'
+              }
+              var container = document.getElementById('container')
+              container.appendChild(newParagraph)
+            }
+
+            // version 2
+            // for (let i = 0; i < list.length; i++) {
+            //   const _status = list[i].childNodes[2].innerHTML
+            //   const _date = list[i].childNodes[0].innerHTML
+            //   const newParagraph = document.createElement('p')
+            //   newParagraph.textContent = groupTypeTitle[_status] + ' \t ' + _date
+            //   if (status === list[i].childNodes[2].innerHTML) {
+            //     newParagraph.style.color = 'green'
+            //   }
+            //   var container = document.getElementById('container')
+            //   container.appendChild(newParagraph)
+            // }
+          }
+        }
+        xhr.send(soapBody)
+      }
+    </script>
+  </body>
+</html>
