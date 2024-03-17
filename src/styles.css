@@ -82,12 +82,12 @@ label {
 }
 
 input[type='text'],
-input[type='date'],
+input[type='datetime-local'],
 input[type='file'],
 select {
   width: 100%;
   padding: 10px;
-  padding-right: 40px;
+  /* padding-right: 40px; */
   border: 1px solid #ddd;
   border-radius: 4px;
   font-weight: 300;
@@ -101,6 +101,88 @@ select {
 
 input[type='radio'] {
   margin-right: 5px;
+}
+
+.date-picker {
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  background-color: white;
+  position: relative; /* Container for absolute positioning */
+}
+
+.date-input {
+  flex-grow: 1;
+  border: none;
+  padding: 10px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  height: 40px; /* Adjust height as necessary */
+}
+
+.calendar-icon {
+  background-repeat: no-repeat;
+  background-size: contain;
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px; /* Width of your icon */
+  height: 100%; /* Height of your icon */
+  pointer-events: none;
+  background-color: #666;
+  display: flex;
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+}
+
+.calendar-icon img {
+  right: 0px;
+  top: 50%;
+  width: 50%; /* Adjust as needed */
+  height: auto; /* Keep image aspect ratio */
+}
+
+.date-input:focus {
+  outline: none;
+}
+
+/* file upload */
+.file-upload-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+  position: relative;
+}
+
+.file-upload-input {
+  width: 100%;
+  padding: 0px;
+  border: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.file-upload-icon {
+  flex: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: #666;
+  height: 100%;
+  width: 42px; /* Adjust as needed */
+  display: flex;
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+}
+
+.file-upload-icon img {
+  width: 50%; /* Adjust as needed */
+  height: auto; /* Keep image aspect ratio */
 }
 
 input[type='file']::-webkit-file-upload-button,
