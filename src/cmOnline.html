@@ -1,20 +1,45 @@
-<!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
     <title>Check cm online</title>
   </head>
   <body>
-    <h1>Check cm online</h1>
-    <label for="serialInput">serial no:</label>
-    <input type="text" id="serialInput" name="serialInput" />
-    <button onclick="pressBTN()">Check</button>
-    <h2 id="title"></h2>
-    <p id="date"></p>
-    <p id="center"></p>
-    <h2 id="status"></h2>
-    <div id="container"></div>
+    <div class="container">
+      <label for="serialInput">Serial no: <span class="required-asterisk">*</span></label>
+      <div class="input-container">
+        <input
+          type="text"
+          id="serialInput"
+          name="serialInput"
+          placeholder="กรอก Serial No (ตัวอย่าง : UPFS2215433)"
+          class="input-field"
+        />
+        <button class="button" onclick="pressBTN()">ตรวจสอบการรับประกัน</button>
+      </div>
+
+      <div class="progress-tracker" id="progress"></div>
+    </div>
 
     <script>
+      function convertDate(isoDateString) {
+        const date = new Date(isoDateString)
+        const buddhistYear = date.getFullYear() + 543
+        const day = date.getDate().toString().padStart(2, '0')
+        const month = (date.getMonth() + 1).toString().padStart(2, '0')
+        const hours = date.getHours().toString().padStart(2, '0')
+        const minutes = date.getMinutes().toString().padStart(2, '0')
+        const formattedDate = `${day}/${month}/${buddhistYear} ${hours}:${minutes}`
+        return formattedDate
+      }
+
       function pressBTN() {
         // 220704030530151
         console.log('PRESS')
@@ -29,7 +54,8 @@
           '<bpm:BPM_TargetApplication_CheckCmSerial>' +
           '<!--Optional:-->' +
           '<serial>' +
-          serialNumber.value +
+          '220704030530151' +
+          // serialNumber.value +
           '</serial>' +
           '</bpm:BPM_TargetApplication_CheckCmSerial>' +
           '</soapenv:Body>' +
@@ -38,58 +64,120 @@
         xhr.onreadystatechange = function () {
           console.log('state change')
           if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log('success')
             const xmlDoc = this.responseXML
-            const status = xmlDoc.getElementsByTagName('cmStatus')[0].innerHTML
+            const currentStatus = xmlDoc.getElementsByTagName('cmStatus')[0].innerHTML
+            // const date = xmlDoc.getElementsByTagName('appRecDateStr')[0].innerHTML
             const groupType = xmlDoc.getElementsByTagName('maGroup')[0].innerHTML
             const center = xmlDoc.getElementsByTagName('centerName')[0].innerHTML
-            const date = xmlDoc.getElementsByTagName('appRecDateStr')[0].innerHTML
             const list = xmlDoc.getElementsByTagName('cmOrderList')
-            document.getElementById('title').innerText = 'ทีมช่างบริการ'
-            document.getElementById('date').innerText = date
-            document.getElementById('center').innerText = center
-            document.getElementById('status').innerText = 'สถานะ'
-
             const groupTypeTitle = {
-              PP: 'ทีมช่างเข้าบริการ',
-              PS: 'รอเสนอราคา',
-              PC: 'อยู่ในขั้นตอนการซ่อม',
-              PV: 'กําลังดําเนินการส่งสินค้า',
-              S: 'เสร็จสิ้น',
+              PP: {
+                name: 'ทีมช่างเข้าบริการ',
+                activeImg: '../src/svg/engineer-worker-svgrepo-com.svg',
+                inactiveImg: '../src/svg/engineer-worker-svgrepo-com-dot.svg',
+                position: 0,
+              },
+              PS: {
+                name: 'รอเสนอราคา',
+                activeImg: '../src/svg/invoice-bill-svgrepo-com.svg',
+                inactiveImg: '../src/svg/invoice-bill-svgrepo-com-dot.svg',
+                position: 1,
+              },
+              PC: {
+                name: 'อยู่ในขั้นตอนการซ่อม',
+                activeImg: '../src/svg/fix-fixing-phone-svgrepo-com.svg',
+                inactiveImg: '../src/svg/fix-fixing-phone-svgrepo-com-dot.svg',
+                position: 2,
+              },
+              PV: {
+                name: 'กําลังดําเนินการส่งสินค้า',
+                activeImg: '../src/svg/truck-thin-svgrepo-com.svg',
+                inactiveImg: '../src/svg/truck-thin-svgrepo-com-dot.svg',
+                position: 3,
+              },
+              S: {
+                name: 'เสร็จสิ้น',
+                activeImg: '../src/svg/badge-reward-svgrepo-com.svg',
+                inactiveImg: '../src/svg/badge-reward-svgrepo-com-dot.svg',
+                position: 4,
+              },
             }
-
-            const groupTypeTitle2 = {
-              PP: 'ทีมช่างเข้าบริการ',
-              PC: 'อยู่ในขั้นตอนการซ่อม',
-              PV: 'กําลังดําเนินการส่งสินค้า',
-              S: 'เสร็จสิ้น',
+            const detail = {
+              PP: '',
+              PS: '',
+              PC: '',
+              PV: '',
+              S: '',
             }
-            // version 1
-            const items = groupType === '1' ? groupTypeTitle2 : groupTypeTitle
-            for (let i = 0; i < Object.values(items).length; i++) {
-              const newParagraph = document.createElement('p')
-              newParagraph.textContent = Object.values(items)[i]
-              console.log(status)
-              if (status === Object.keys(items)[i]) {
-                newParagraph.style.color = 'green'
+            for (let i = 0; i < list.length; i++) {
+              const _status = list[i].childNodes[2].innerHTML
+              const _date = list[i].childNodes[0]?.innerHTML
+              detail[_status] = {
+                date: _date || '',
+                status: groupTypeTitle[_status].name,
+                center,
+                img: {
+                  active: groupTypeTitle[_status].activeImg,
+                  inactive: groupTypeTitle[_status].inactiveImg,
+                },
+                position: groupTypeTitle[_status].position,
               }
-              var container = document.getElementById('container')
-              container.appendChild(newParagraph)
             }
 
-            // version 2
-            // for (let i = 0; i < list.length; i++) {
-            //   const _status = list[i].childNodes[2].innerHTML
-            //   const _date = list[i].childNodes[0].innerHTML
-            //   const newParagraph = document.createElement('p')
-            //   newParagraph.textContent = groupTypeTitle[_status] + ' \t ' + _date
-            //   if (status === list[i].childNodes[2].innerHTML) {
-            //     newParagraph.style.color = 'green'
-            //   }
-            //   var container = document.getElementById('container')
-            //   container.appendChild(newParagraph)
-            // }
+            // version 1
+            const items =
+              groupType === '1' ? ['PP', 'PC', 'PV', 'S'] : ['PP', 'PS', 'PC', 'PV', 'S']
+            const progress = document.getElementById('progress')
+            progress.innerHTML = ''
+            for (let i = 0; i < items.length; i++) {
+              const _status = items[i]
+              const step = document.createElement('div')
+              step.className = 'step'
+              const stepIcon = document.createElement('div')
+              stepIcon.className = 'icon'
+              const image = document.createElement('img')
+              const stepInfo = document.createElement('div')
+              const _title = document.createElement('div')
+              const _date = document.createElement('div')
+              const _details = document.createElement('div')
+              const hr = document.createElement('hr')
+              stepInfo.className = 'info'
+
+              if (detail[_status].position <= detail[currentStatus].position) {
+                image.src = detail[_status].img.active
+                _title.className = 'title'
+                _date.className = 'date'
+                _details.className = 'details'
+              } else {
+                image.src = detail[_status].img.inactive
+                _title.className = 'title-dot'
+                _date.className = 'date-dot'
+                _details.className = 'details-dot'
+              }
+              if (detail[_status].position >= detail[currentStatus].position) {
+                hr.className = 'dot'
+              }
+              _title.innerHTML = detail[_status].status
+              _date.innerHTML = convertDate(detail[_status].date)
+              _details.innerHTML = center
+
+              stepIcon.appendChild(image)
+              step.appendChild(stepIcon)
+              stepInfo.appendChild(_title)
+              stepInfo.appendChild(_date)
+              stepInfo.appendChild(_details)
+              step.appendChild(stepInfo)
+              stepInfo.appendChild(_details)
+              step.appendChild(stepInfo)
+              progress.appendChild(step)
+              if (i + 1 !== items.length) {
+                progress.appendChild(hr)
+              }
+            }
           }
         }
+
         xhr.send(soapBody)
       }
     </script>

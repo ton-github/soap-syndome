@@ -1,25 +1,39 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
     <title>Check warranty online</title>
   </head>
   <body>
-    <h1>Check warranty online</h1>
-    <label for="serialInput">serial no:</label>
-    <input type="text" id="serialInput" name="serialInput" />
-    <button onclick="pressBTN()">Check</button>
-    <table id="warrantyTable" border="1">
-      <thead>
-        <tr>
-          <th>Serial</th>
-          <th>Detail</th>
-          <th>Start Date</th>
-          <th>End Date</th>
-          <th>Warranty</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
+    <!-- <h1>Check warranty online</h1> -->
+    <div class="container">
+      <label for="serialInput">Serial no: <span class="required-asterisk">*</span></label>
+      <div class="input-container">
+        <input
+          type="text"
+          id="serialInput"
+          name="serialInput"
+          placeholder="กรอก Serial No (ตัวอย่าง : UPFS2215433)"
+          class="input-field"
+        />
+        <button class="button" onclick="pressBTN()">ตรวจสอบการรับประกัน</button>
+      </div>
+
+      <div class="table-section" id="tableSection">
+        <table id="warrantyTable" border="1">
+          <thead id="talbeHead"></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
 
     <script>
       function pressBTN() {
@@ -33,7 +47,8 @@
           '<soapenv:Body>' +
           '<bpm:BPM_TargetApplication_CheckWarranty>' +
           '<serial>' +
-          serialNumber.value +
+          // serialNumber.value +
+          '220704030530151' +
           '</serial>' +
           '</bpm:BPM_TargetApplication_CheckWarranty>' +
           '</soapenv:Body>' +
@@ -43,7 +58,18 @@
           if (xhr.readyState === 4 && xhr.status === 200) {
             const xmlDoc = this.responseXML
             const result = xmlDoc.getElementsByTagName('resultSerialDetail')
-            const tableBody = document.getElementById('tableBody')
+            const tbody = document.getElementById('tableBody')
+            const thead = document.getElementById('talbeHead')
+            tbody.innerHTML = ''
+            thead.innerHTML = ''
+            const headerRow = document.createElement('tr')
+            thead.appendChild(headerRow)
+            const headers = ['Serial', 'Detail', 'Start Date', 'End Date', 'Warranty']
+            headers.forEach(function (headerText) {
+              var th = document.createElement('th')
+              th.textContent = headerText
+              headerRow.appendChild(th)
+            })
             const row = document.createElement('tr')
             ;[0, 9, 14, 12, 18].forEach((field) => {
               const cell = document.createElement('td')
@@ -61,7 +87,7 @@
                 cell.textContent = result[0].childNodes[field].innerHTML
               }
               row.appendChild(cell)
-              tableBody.appendChild(row)
+              tbody.appendChild(row)
             })
           }
         }

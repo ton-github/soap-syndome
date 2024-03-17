@@ -3,101 +3,240 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
     <title>Register customer</title>
   </head>
+
   <body>
-    <form id="register">
-      <!--- section 1-->
-      <h1>ข้อมูลสินค้า</h1>
-      <label for="crmSerial">serial no:</label>
-      <input type="text" id="crmSerial" name="crmSerial" /><br /><br />
+    <!-- Section 1: ข้อมูลสินค้า -->
+    <div class="container">
+      <form id="register">
+        <div class="header">
+          <h4>ข้อมูลสินค้า</h4>
+        </div>
+        <div class="form-group">
+          <label for="crmSerial">Serial No <span class="required-asterisk">*</span></label>
+          <input
+            type="text"
+            id="crmSerial"
+            name="crmSerial"
+            placeholder="กรุณาระบุ Serial No ตัวอย่าง : UPSF2215433"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="crmModelId">รุ่นผลิตภัณฑ์ <span class="required-asterisk">*</span></label>
+          <select id="crmModelId" name="crmModelId" required>
+            <option disabled selected>กรุณาเลือกรุ่น</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="crmChannelId"
+            >ช่องทางการซื้อผลิตภัณฑ์ <span class="required-asterisk">*</span></label
+          >
+          <select id="crmChannelId" name="crmChannelId" required>
+            <option disabled selected>กรุณาเลือก</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="crmChannel">อื่นๆ</label>
+          <input type="text" id="crmChannel" name="crmChannel" />
+        </div>
+        <div class="form-group">
+          <label for="crmPurchaseDateStr"
+            >วันที่ซื้อผลิตภัณฑ์ <span class="required-asterisk">*</span></label
+          >
+          <input type="date" id="crmPurchaseDateStr" name="crmPurchaseDateStr" required />
+          <div class="date-icon"></div>
+        </div>
+        <div class="form-group">
+          <label for="crmFileContent"
+            >ใบกำกับภาษีหรือใบเสร็จ <span class="required-asterisk">*</span></label
+          >
+          <input type="file" id="crmFileContent" name="crmFileContent" required />
+        </div>
 
-      <label for="crmModelId">รุ่นผลิตภัณฑ์</label>
-      <select id="crmModelId" name="crmModelId">
-        <option disabled selected>กรุณาเลือก</option>
-      </select>
-      <br /><br />
+        <!-- Section 2: รายละเอียดลูกค้า -->
+        <div class="header">
+          <h4>รายละเอียดลูกค้า</h4>
+        </div>
 
-      <label for="crmChannelId">ช่องทางการซื้อผลิตภัณฑ์</label>
-      <select id="crmChannelId" name="crmChannelId">
-        <option disabled selected>กรุณาเลือก</option>
-      </select>
-      <label for="crmChannel">อื่นๆ:</label>
-      <input type="text" id="crmChannel" name="crmChannel" /><br /><br />
+        <div class="form-group">
+          <div class="form-one-row">
+            <input
+              type="radio"
+              id="individual"
+              name="crmPerson"
+              value="1"
+              checked
+              onchange="toggleOrganizationField()"
+            />
+            <label for="individual">บุคคลธรรมดา</label>
+            <input
+              type="radio"
+              id="legalEntity"
+              name="crmPerson"
+              value="2"
+              onchange="toggleOrganizationField()"
+            />
+            <label for="legalEntity">นิติบุคคล</label>
+          </div>
+        </div>
 
-      <label for="crmPurchaseDateStr">วันที่ซื้อผลิตภัณฑ์:</label>
-      <input type="datetime-local" id="crmPurchaseDateStr" name="crmPurchaseDateStr" /> <br /><br />
+        <div class="form-group" id="organizationField" style="display: none">
+          <label for="crmOrganization"
+            >ชื่อนิติบุลคล <span class="required-asterisk">*</span></label
+          >
+          <input type="text" id="crmOrganization" name="crmOrganization" />
+        </div>
 
-      <label for="crmFileContent">ใบกำกับภาษีหรือใบเสร็จ</label>
-      <input type="file" id="crmFileContent" name="crmFileContent" /><br /><br />
+        <div class="form-row">
+          <div class="form-group">
+            <label for="crmTitleId">คํานําหน้า <span class="required-asterisk">*</span></label>
+            <select id="crmTitleId" name="crmTitleId" required>
+              <option disabled selected>กรุณาเลือก</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="crmNameTh">ชื่อ <span class="required-asterisk">*</span></label>
+            <input
+              type="text"
+              id="crmNameTh"
+              name="crmNameTh"
+              placeholder="กรุณากรอกชื่อของคุณ"
+              required
+            />
+          </div>
 
-      <!--- section 2-->
-      <h1>รายละเอียด</h1>
-      <label>
-        <input type="radio" name="crmPerson" value="1" checked />
-        นิติบุคคล
-      </label>
-      <label>
-        <input type="radio" name="crmPerson" value="2" />
-        บุคคลธรรมดา
-      </label>
-      <br /><br />
+          <div class="form-group">
+            <label for="crmSurnameTh">นามสกุล <span class="required-asterisk">*</span></label>
+            <input
+              type="text"
+              id="crmSurnameTh"
+              name="crmSurnameTh"
+              placeholder="กรุณากรอกนามสกลุลของคุณ"
+              required
+            />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="crmTel">เบอร์โทรศัพท์ <span class="required-asterisk">*</span></label>
+            <input
+              type="text"
+              id="crmTel"
+              name="crmTel"
+              placeholder="ตัวอย่าง: 0891325643"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="crmEmail">อีเมล</label>
+            <input
+              type="text"
+              id="crmEmail"
+              name="crmEmail"
+              placeholder="ตัวอย่าง: syndome@gmail.com"
+            />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="crmAddressNo">บ้านเลขที่<span class="required-asterisk">*</span></label>
+            <input
+              type="text"
+              id="crmAddressNo"
+              name="crmAddressNo"
+              placeholder="กรุณากรอกบ้านเลขที่"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="crmVillage">หมู่บ้าน/อาคาร/คอนโด</label>
+            <input
+              type="text"
+              id="crmVillage"
+              name="villcrmVillageage"
+              placeholder="กรุณากรอก หมู่บ้าน/อาคาร/คอนโด"
+            />
+          </div>
+        </div>
 
-      <label for="crmOrganization">ชื่อนิติบุลคล:</label>
-      <input type="text" id="crmOrganization" name="crmOrganization" /><br /><br />
+        <div class="form-row">
+          <div class="form-group">
+            <label for="crmSoi">ซอย</label>
+            <input type="text" id="crmSoi" name="crmSoi" placeholder="กรุณากรอก ซอย" />
+          </div>
 
-      <label for="crmTitleId">คํานําหน้า</label>
-      <select id="crmTitleId" name="crmTitleId">
-        <option disabled selected>กรุณาเลือก</option>
-      </select>
-      <br /><br />
+          <div class="form-group">
+            <label for="crmRoad">ถนน</label>
+            <input type="text" id="crmRoad" name="crmRoad" placeholder="กรุณากรอก ซอย" />
+          </div>
+        </div>
 
-      <label for="crmNameTh">ชื่อ:</label>
-      <input type="text" id="crmNameTh" name="crmNameTh" /><br /><br />
-
-      <label for="crmSurnameTh">นามสกุล:</label>
-      <input type="text" id="crmSurnameTh" name="crmSurnameTh" /><br /><br />
-
-      <label for="crmTel">เบอร์โทรศัพท์</label>
-      <input type="text" id="crmTel" name="crmTel" /><br /><br />
-
-      <label for="crmEmail">อีเมล</label>
-      <input type="text" id="crmEmail" name="crmEmail" /><br /><br />
-
-      <label for="crmAddressNo">บ้านเลขที่</label>
-      <input type="text" id="crmAddressNo" name="crmAddressNo" /><br /><br />
-
-      <label for="crmVillage">หมู่บ้าน/อาคาร/คอนโด</label>
-      <input type="text" id="crmVillage" name="villcrmVillageage" /><br /><br />
-
-      <label for="crmSoi">ซอย</label>
-      <input type="text" id="crmSoi" name="crmSoi" /><br /><br />
-
-      <label for="crmRoad">ถนน</label>
-      <input type="text" id="crmRoad" name="crmRoad" /><br /><br />
-
-      <label for="crmProvinceCode">จังหวัด</label>
-      <select id="crmProvinceCode" name="crmProvinceCode" onchange="getDistrict()">
-        <option disabled selected>กรุณาเลือก</option>
-      </select>
-      <br /><br />
-
-      <label for="crmDistrictCode">เขต/อำเภอ</label>
-      <select id="crmDistrictCode" name="crmDistrictCode" onchange="getSubDistrict()">
-        <option disabled selected>กรุณาเลือก</option>
-      </select>
-      <br /><br />
-
-      <label for="crmSubdistrictCode">แขวง/ตำบล</label>
-      <select id="crmSubdistrictCode" name="crmSubdistrictCode" onchange="getZipCode()">
-        <option disabled selected>กรุณาเลือก</option>
-      </select>
-      <br /><br />
-
-      <label for="crmPostalCode">รหัสไปรษณีย์</label>
-      <input type="text" id="crmPostalCode" name="crmPostalCode" /><br /><br />
-    </form>
-    <button onclick="submitForm()">Check</button>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="crmProvinceCode">จังหวัด <span class="required-asterisk">*</span></label>
+            <select id="crmProvinceCode" name="crmProvinceCode" onchange="getDistrict()" required>
+              <option disabled selected>กรุณาเลือก</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="crmDistrictCode">เขต/อำเภอ <span class="required-asterisk">*</span></label>
+            <select
+              id="crmDistrictCode"
+              name="crmDistrictCode"
+              onchange="getSubDistrict()"
+              required
+            >
+              <option disabled selected>กรุณาเลือก</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="crmSubdistrictCode"
+              >แขวง/ตำบล <span class="required-asterisk">*</span></label
+            >
+            <select
+              id="crmSubdistrictCode"
+              name="crmSubdistrictCode"
+              onchange="getZipCode()"
+              required
+            >
+              <option disabled selected>กรุณาเลือก</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="crmPostalCode">รหัสไปรษณีย์ <span class="required-asterisk">*</span></label>
+            <input
+              type="text"
+              id="crmPostalCode"
+              name="crmPostalCode"
+              placeholder="รหัสไปรษณีย์"
+              required
+            />
+          </div>
+        </div>
+        <div class="agreement">
+          <label class="checkbox-container">
+            <input type="checkbox" id="agreementCheckbox" name="agreement" required />
+            <span class="checkmark"></span>
+            ข้าพเจ้าได้ตรวจและยอมรับเงื่อนไขตามที่ระบุไว้ และยินยอมให้ความยินยอมในการเก็บ
+            ใช้และเปิดเผยข้อมูลส่วนบุคคลของข้าพเจ้า ตามวัตถุประสงค์ที่เกี่ยวข้องตามนโยบาย
+          </label>
+        </div>
+        <div class="center">
+          <button onclick="submitForm()">ลงทะเบียนรับประกัน</button>
+        </div>
+      </form>
+    </div>
 
     <script>
       getModel()
@@ -121,8 +260,8 @@
             const xmlDoc = this.responseXML
             const result = xmlDoc.getElementsByTagName('crmChannelList')
             const selectModel = document.getElementById('crmChannelId')
-            for (let i = 0; i < result.length; i++) {
-              const items = result[i].childNodes
+            for (const element of result) {
+              const items = element.childNodes
               const optionElement = document.createElement('option')
               optionElement.textContent = items[2].innerHTML
               optionElement.value = items[1].innerHTML
@@ -149,8 +288,8 @@
             const xmlDoc = this.responseXML
             const result = xmlDoc.getElementsByTagName('crmModelList')
             const selectModel = document.getElementById('crmModelId')
-            for (let i = 0; i < result.length; i++) {
-              const items = result[i].childNodes
+            for (const element of result) {
+              const items = element.childNodes
               const optionElement = document.createElement('option')
               optionElement.textContent = items[2].innerHTML
               optionElement.value = items[1].innerHTML
@@ -177,8 +316,8 @@
             const xmlDoc = this.responseXML
             const result = xmlDoc.getElementsByTagName('provinceList')
             const selectModel = document.getElementById('crmProvinceCode')
-            for (let i = 0; i < result.length; i++) {
-              const items = result[i].childNodes
+            for (const element of result) {
+              const items = element.childNodes
               const optionElement = document.createElement('option')
               optionElement.textContent = items[3].innerHTML
               optionElement.value = items[0].innerHTML
@@ -459,6 +598,18 @@
         }
         xhr.send(soapBody)
       }
+      function toggleOrganizationField() {
+        var radioValue = document.querySelector('input[name="crmPerson"]:checked').value
+        var organizationField = document.getElementById('organizationField')
+        if (radioValue === '2') {
+          organizationField.style.display = 'block' // Show
+        } else {
+          organizationField.style.display = 'none' // Hide
+        }
+      }
+
+      // Call the function on page load to set the correct initial state
+      window.onload = toggleOrganizationField
     </script>
   </body>
 </html>
