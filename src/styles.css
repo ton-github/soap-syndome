@@ -16,7 +16,6 @@ form {
 
 .container {
   max-width: 60%;
-  /* max-width: 60%; */
   margin: 0 auto;
   background: #fff;
   padding: 40px;
@@ -26,6 +25,19 @@ form {
 
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  color: #ff6900;
+  position: absolute;
+  right: 10px;
+  top: 8px;
+}
+
+.select-form {
+  /* background-color: #2196f3; */
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  /* flex: 1; */
+  /* margin: auto; */
 }
 
 .form-group {
