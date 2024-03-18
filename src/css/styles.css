@@ -5,7 +5,6 @@
 }
 
 body {
-  font-family: 'Kanit', sans-serif !important;
   padding: 20px;
   font-weight: 300;
   background-color: #f7f7f7;
@@ -219,7 +218,7 @@ button:hover {
 .checkbox-container {
   display: block;
   position: relative;
-  padding-left: 25px;
+  padding-left: 40px;
   margin-bottom: 12px;
   cursor: pointer;
   font-size: 14px; /* Adjust as needed */
@@ -244,12 +243,13 @@ button:hover {
   left: 0;
   height: 15px;
   width: 15px;
-  background-color: #eee;
-  border: 1px solid #ddd; /* Adjust as needed */
+  /* background-color: #eee; */
+  border: 2px solid #9a9a9a;
 }
 
 .checkbox-container input:checked ~ .checkmark {
-  background-color: #2196f3;
+  /* background-color: #ff6900; */
+  background-color: white;
 }
 
 .checkmark:after {
@@ -263,11 +263,11 @@ button:hover {
 }
 
 .checkbox-container .checkmark:after {
-  left: 1px;
-  top: 1px;
-  width: 6px;
-  height: 11px;
-  border: solid white;
+  left: 4px;
+  top: 0px;
+  width: 5px;
+  height: 10px;
+  border: solid #ff6900;
   border-width: 0 3px 3px 0;
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
@@ -442,6 +442,39 @@ hr {
   width: 30%;
 }
 
+/* Hide the default radio button */
+.custom-radio input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.checkmark-radio {
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 15px;
+  width: 15px;
+  background-color: white;
+  border-radius: 50%;
+  border: 0.5px solid #9a9a9a; /* Default border color */
+  display: inline-block;
+}
+
+/* Create the inner circle for the checked state */
+.custom-radio input:checked ~ .checkmark-radio::after {
+  content: '';
+  position: absolute;
+  top: 2.5px;
+  left: 2.5px;
+  width: 10px;
+  height: 10px;
+  background-color: #ff6900; /* Inner circle color */
+  border-radius: 50%;
+  display: block;
+}
+
 @media only screen and (max-width: 768px) {
   .container {
     max-width: 100%;
@@ -484,7 +517,7 @@ hr {
     transform: rotate(90deg);
     margin: 20px 0;
     border-top: 1px dashed orange;
-    width: 10% !important;
+    width: 20px !important;
   }
 
   .dot {

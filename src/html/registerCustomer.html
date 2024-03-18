@@ -13,18 +13,19 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
     />
-    <link rel="stylesheet" href="styles.css" />
-    <title>Register CM</title>
+    <link rel="stylesheet" href="../css/styles.css" />
+    <title>Register customer</title>
   </head>
+
   <body>
+    <!-- Section 1: ข้อมูลสินค้า -->
     <div class="container">
-      <form id="register">
-        <!--- section 1-->
+      <form id="register" method="post" onsubmit="">
         <div class="header">
           <h4>ข้อมูลสินค้า</h4>
         </div>
         <div class="form-group">
-          <label for="crmSerial">Serial no <span class="required-asterisk">*</span></label>
+          <label for="crmSerial">Serial No <span class="required-asterisk">*</span></label>
           <input
             type="text"
             id="crmSerial"
@@ -36,45 +37,91 @@
         <div class="form-group">
           <label for="crmModelId">รุ่นผลิตภัณฑ์ <span class="required-asterisk">*</span></label>
           <div class="select-form">
-            <select id="crmModelId" name="crmModelId">
-              <option disabled selected>กรุณาเลือก</option>
+            <select id="crmModelId" name="crmModelId" required>
+              <option disabled selected>กรุณาเลือกรุ่น</option>
             </select>
             <span class="material-symbols-outlined"> keyboard_arrow_down </span>
           </div>
         </div>
-
-        <!--- section 2-->
-        <div class="header">
-          <h4>อาการเสีย</h4>
-        </div>
-
         <div class="form-group">
-          <label for="cmoRptId">อาการเสีย <span class="required-asterisk">*</span></label>
+          <label for="crmChannelId"
+            >ช่องทางการซื้อผลิตภัณฑ์ <span class="required-asterisk">*</span></label
+          >
           <div class="select-form">
-            <select id="cmoRptId" name="cmoRptId">
+            <select id="crmChannelId" name="crmChannelId" required>
               <option disabled selected>กรุณาเลือก</option>
             </select>
             <span class="material-symbols-outlined"> keyboard_arrow_down </span>
           </div>
         </div>
         <div class="form-group">
-          <label for="cmoRepairAdditional">รายละเอียดเพิ่มเติม:</label>
-          <input type="text" id="cmoRepairAdditional" name="cmoRepairAdditional" />
+          <label for="crmChannel">อื่นๆ</label>
+          <input type="text" id="crmChannel" name="crmChannel" />
         </div>
         <div class="form-group">
-          <label>
-            <input type="checkbox" id="cmoMoreOne" />
-            มากกว่า 1 เครื่อง <span class="required-asterisk">*</span>
-          </label>
+          <label for="crmPurchaseDateStr"
+            >วันที่ซื้อผลิตภัณฑ์ <span class="required-asterisk">*</span></label
+          >
+          <div class="date-picker">
+            <input
+              type="datetime-local"
+              class="date-input"
+              id="crmPurchaseDateStr"
+              name="crmPurchaseDateStr"
+              required
+            />
+            <label for="dateInput" class="calendar-icon">
+              <img src="../src/svg/calendar-days-svgrepo-com.svg" alt="calendar" />
+            </label>
+          </div>
         </div>
 
-        <!--- section 3-->
+        <div class="form-group">
+          <label for="crmFileContent"
+            >ใบกำกับภาษีหรือใบเสร็จ <span class="required-asterisk">*</span></label
+          >
+          <div class="file-upload-container">
+            <input type="file" id="crmFileContent" name="crmFileContent" required />
+            <label for="fileUpload" class="file-upload-icon">
+              <img src="../src/svg/export-svgrepo-com.svg" alt="Upload" />
+            </label>
+          </div>
+        </div>
+
+        <!-- Section 2: รายละเอียดลูกค้า -->
         <div class="header">
-          <h4>รายละเอียด</h4>
+          <h4>รายละเอียดลูกค้า</h4>
         </div>
 
         <div class="form-group">
           <div class="form-one-row">
+            <label for="individual" class="custom-radio">
+              <input
+                type="radio"
+                id="individual"
+                name="crmPerson"
+                value="1"
+                checked
+                onchange="toggleOrganizationField()"
+              />
+              <span class="checkmark-radio"></span>
+              บุคคลธรรมดา
+            </label>
+            <div style="width: 20px"></div>
+            <label for="legalEntity" class="custom-radio">
+              <input
+                type="radio"
+                id="legalEntity"
+                name="crmPerson"
+                value="2"
+                onchange="toggleOrganizationField()"
+              />
+              <span class="checkmark-radio"></span>
+              นิติบุคคล
+            </label>
+          </div>
+
+          <!-- <div class="form-one-row">
             <input
               type="radio"
               id="individual"
@@ -92,7 +139,7 @@
               onchange="toggleOrganizationField()"
             />
             <label for="legalEntity">นิติบุคคล</label>
-          </div>
+          </div> -->
         </div>
 
         <div class="form-group" id="organizationField" style="display: none">
@@ -101,67 +148,117 @@
           >
           <input type="text" id="crmOrganization" name="crmOrganization" />
         </div>
+
         <div class="form-row">
           <div class="form-group">
             <label for="crmTitleId">คํานําหน้า <span class="required-asterisk">*</span></label>
-            <select id="crmTitleId" name="crmTitleId">
-              <option disabled selected>กรุณาเลือก</option>
-            </select>
+            <div class="select-form">
+              <select id="crmTitleId" name="crmTitleId" required>
+                <option disabled selected>กรุณาเลือก</option>
+              </select>
+              <span class="material-symbols-outlined"> keyboard_arrow_down </span>
+            </div>
           </div>
           <div class="form-group">
             <label for="crmNameTh">ชื่อ <span class="required-asterisk">*</span></label>
-            <input type="text" id="crmNameTh" name="crmNameTh" />
+            <input
+              type="text"
+              id="crmNameTh"
+              name="crmNameTh"
+              placeholder="กรุณากรอกชื่อของคุณ"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="crmSurnameTh">นามสกุล <span class="required-asterisk">*</span></label>
+            <input
+              type="text"
+              id="crmSurnameTh"
+              name="crmSurnameTh"
+              placeholder="กรุณากรอกนามสกลุลของคุณ"
+              required
+            />
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label for="crmTel">เบอร์โทรศัพท์ <span class="required-asterisk">*</span></label>
-            <input type="text" id="crmTel" name="crmTel" />
+            <input
+              type="text"
+              id="crmTel"
+              name="crmTel"
+              placeholder="ตัวอย่าง: 0891325643"
+              required
+            />
           </div>
           <div class="form-group">
-            <label for="cmoOfficeTel"
-              >เบอร์โทรศัพท์สำนักงาน <span class="required-asterisk">*</span></label
-            >
-            <input type="text" id="cmoOfficeTel" name="cmoOfficeTel" />
+            <label for="crmEmail">อีเมล</label>
+            <input
+              type="text"
+              id="crmEmail"
+              name="crmEmail"
+              placeholder="ตัวอย่าง: syndome@gmail.com"
+            />
           </div>
-        </div>
-        <div class="form-group">
-          <label for="crmEmail">อีเมล</label>
-          <input type="text" id="crmEmail" name="crmEmail" />
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label for="crmAddressNo">บ้านเลขที่ <span class="required-asterisk">*</span></label>
-            <input type="text" id="crmAddressNo" name="crmAddressNo" />
+            <label for="crmAddressNo">บ้านเลขที่<span class="required-asterisk">*</span></label>
+            <input
+              type="text"
+              id="crmAddressNo"
+              name="crmAddressNo"
+              placeholder="กรุณากรอกบ้านเลขที่"
+              required
+            />
           </div>
           <div class="form-group">
             <label for="crmVillage">หมู่บ้าน/อาคาร/คอนโด</label>
-            <input type="text" id="crmVillage" name="villcrmVillageage" />
+            <input
+              type="text"
+              id="crmVillage"
+              name="villcrmVillageage"
+              placeholder="กรุณากรอก หมู่บ้าน/อาคาร/คอนโด"
+            />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label for="crmSoi">ซอย</label>
-            <input type="text" id="crmSoi" name="crmSoi" />
+            <input type="text" id="crmSoi" name="crmSoi" placeholder="กรุณากรอก ซอย" />
           </div>
+
           <div class="form-group">
             <label for="crmRoad">ถนน</label>
-            <input type="text" id="crmRoad" name="crmRoad" />
+            <input type="text" id="crmRoad" name="crmRoad" placeholder="กรุณากรอก ซอย" />
           </div>
         </div>
+
         <div class="form-row">
           <div class="form-group">
             <label for="crmProvinceCode">จังหวัด <span class="required-asterisk">*</span></label>
-            <select id="crmProvinceCode" name="crmProvinceCode" onchange="getDistrict()">
-              <option disabled selected>กรุณาเลือก</option>
-            </select>
+            <div class="select-form">
+              <select id="crmProvinceCode" name="crmProvinceCode" onchange="getDistrict()" required>
+                <option disabled selected>กรุณาเลือก</option>
+              </select>
+              <span class="material-symbols-outlined"> keyboard_arrow_down </span>
+            </div>
           </div>
           <div class="form-group">
             <label for="crmDistrictCode">เขต/อำเภอ <span class="required-asterisk">*</span></label>
-            <select id="crmDistrictCode" name="crmDistrictCode" onchange="getSubDistrict()">
-              <option disabled selected>กรุณาเลือก</option>
-            </select>
+            <div class="select-form">
+              <select
+                id="crmDistrictCode"
+                name="crmDistrictCode"
+                onchange="getSubDistrict()"
+                required
+              >
+                <option disabled selected>กรุณาเลือก</option>
+              </select>
+              <span class="material-symbols-outlined"> keyboard_arrow_down </span>
+            </div>
           </div>
         </div>
         <div class="form-row">
@@ -169,39 +266,50 @@
             <label for="crmSubdistrictCode"
               >แขวง/ตำบล <span class="required-asterisk">*</span></label
             >
-            <select id="crmSubdistrictCode" name="crmSubdistrictCode" onchange="getZipCode()">
-              <option disabled selected>กรุณาเลือก</option>
-            </select>
+            <div class="select-form">
+              <select
+                id="crmSubdistrictCode"
+                name="crmSubdistrictCode"
+                onchange="getZipCode()"
+                required
+              >
+                <option disabled selected>กรุณาเลือก</option>
+              </select>
+              <span class="material-symbols-outlined"> keyboard_arrow_down </span>
+            </div>
           </div>
           <div class="form-group">
             <label for="crmPostalCode">รหัสไปรษณีย์ <span class="required-asterisk">*</span></label>
-            <input type="text" id="crmPostalCode" name="crmPostalCode" />
+            <input
+              type="text"
+              id="crmPostalCode"
+              name="crmPostalCode"
+              placeholder="รหัสไปรษณีย์"
+              required
+            />
           </div>
         </div>
         <div class="agreement">
           <label class="checkbox-container">
-            <input type="checkbox" id="agreementCheckbox" />
             <input type="checkbox" id="agreementCheckbox" name="agreement" required />
             <span class="checkmark"></span>
             ข้าพเจ้าได้ตรวจและยอมรับเงื่อนไขตามที่ระบุไว้ และยินยอมให้ความยินยอมในการเก็บ
             ใช้และเปิดเผยข้อมูลส่วนบุคคลของข้าพเจ้า ตามวัตถุประสงค์ที่เกี่ยวข้องตามนโยบาย
           </label>
         </div>
-        <div class="center">
-          <button onclick="submitForm()">ลงทะเบียนรับประกัน</button>
-        </div>
       </form>
+      <div class="center">
+        <button onclick="submitForm()">ลงทะเบียนรับประกัน</button>
+      </div>
     </div>
 
-    <!-- script part-->
     <script>
-      // get data from soap api
       getModel()
       getProvince()
       getPrefix()
-      getRepairType()
+      getChannel()
 
-      function getRepairType() {
+      function getChannel() {
         const xhr = new XMLHttpRequest()
         xhr.open('POST', 'http://192.168.10.250/bpmws/BPMSaleOrderService?wsdl')
         xhr.setRequestHeader('Content-Type', 'text/xml;charset=UTF-8')
@@ -209,20 +317,19 @@
           '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bpm="http://bpmws/">' +
           '<soapenv:Header/>' +
           '<soapenv:Body>' +
-          '<bpm:BPM_TargetApplication_RepairTypeList/>' +
+          '<bpm:BPM_TargetApplication_ChannelList/>' +
           '</soapenv:Body>' +
           '</soapenv:Envelope>'
         xhr.onreadystatechange = function () {
           if (xhr.readyState === 4 && xhr.status === 200) {
             const xmlDoc = this.responseXML
-            // console.log(xmlDoc)
-            const result = xmlDoc.getElementsByTagName('repairTypeList')
-            const selectModel = document.getElementById('cmoRptId')
-            for (let i = 0; i < result.length; i++) {
-              const items = result[i].childNodes
+            const result = xmlDoc.getElementsByTagName('crmChannelList')
+            const selectModel = document.getElementById('crmChannelId')
+            for (const element of result) {
+              const items = element.childNodes
               const optionElement = document.createElement('option')
-              optionElement.textContent = items[1].innerHTML
-              optionElement.value = items[2].innerHTML
+              optionElement.textContent = items[2].innerHTML
+              optionElement.value = items[1].innerHTML
               selectModel.appendChild(optionElement)
             }
           }
@@ -246,14 +353,13 @@
             const xmlDoc = this.responseXML
             const result = xmlDoc.getElementsByTagName('crmModelList')
             const selectModel = document.getElementById('crmModelId')
-            for (let i = 0; i < result.length; i++) {
-              const items = result[i].childNodes
+            for (const element of result) {
+              const items = element.childNodes
               const optionElement = document.createElement('option')
               optionElement.textContent = items[2].innerHTML
               optionElement.value = items[1].innerHTML
               selectModel.appendChild(optionElement)
             }
-            // xhr.abort()
           }
         }
         xhr.send(soapBody)
@@ -273,11 +379,10 @@
         xhr.onreadystatechange = function () {
           if (xhr.readyState === 4 && xhr.status === 200) {
             const xmlDoc = this.responseXML
-            // console.log(xmlDoc)
             const result = xmlDoc.getElementsByTagName('provinceList')
             const selectModel = document.getElementById('crmProvinceCode')
-            for (let i = 0; i < result.length; i++) {
-              const items = result[i].childNodes
+            for (const element of result) {
+              const items = element.childNodes
               const optionElement = document.createElement('option')
               optionElement.textContent = items[3].innerHTML
               optionElement.value = items[0].innerHTML
@@ -302,7 +407,6 @@
         xhr.onreadystatechange = function () {
           if (xhr.readyState === 4 && xhr.status === 200) {
             const xmlDoc = this.responseXML
-            // console.log(xmlDoc)
             const result = xmlDoc.getElementsByTagName('titleList')
             const selectModel = document.getElementById('crmTitleId')
             for (let i = 0; i < result.length; i++) {
@@ -343,7 +447,6 @@
         xhr.onreadystatechange = function () {
           if (xhr.readyState === 4 && xhr.status === 200) {
             const xmlDoc = this.responseXML
-            // console.log(xmlDoc)
             const result = xmlDoc.getElementsByTagName('commonList')
             const select = document.getElementById('crmDistrictCode')
             for (let i = 0; i < result.length; i++) {
@@ -363,11 +466,9 @@
         const districtSelect = document.getElementById('crmSubdistrictCode')
         districtSelect.innerHTML = '<option disabled selected>กรุณาเลือก</option>'
         if (!selectedValue) return
-
         const xhr = new XMLHttpRequest()
         xhr.open('POST', 'http://192.168.10.250/bpmws/BPMSaleOrderService?wsdl')
         xhr.setRequestHeader('Content-Type', 'text/xml;charset=UTF-8')
-
         const soapBody =
           '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bpm="http://bpmws/">' +
           '<soapenv:Header/>' +
@@ -409,7 +510,6 @@
         const xhr = new XMLHttpRequest()
         xhr.open('POST', 'http://192.168.10.250/bpmws/BPMSaleOrderService?wsdl')
         xhr.setRequestHeader('Content-Type', 'text/xml;charset=UTF-8')
-
         const soapBody =
           '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bpm="http://bpmws/">' +
           '<soapenv:Header/>' +
@@ -435,9 +535,15 @@
       }
 
       function submitForm() {
-        console.log('pressBTN')
+        const form = document.getElementById('register')
+        if (!form.checkValidity()) {
+          form.reportValidity()
+          return
+        }
         const crmSerial = document.getElementById('crmSerial').value
+        const crmPurchaseDateStr = document.getElementById('crmPurchaseDateStr').value
         const crmNameTh = document.getElementById('crmNameTh').value
+        const crmSurnameTh = document.getElementById('crmSurnameTh').value
         const crmTel = document.getElementById('crmTel').value
         const crmEmail = document.getElementById('crmEmail').value
         const crmAddressNo = document.getElementById('crmAddressNo').value
@@ -450,12 +556,10 @@
         const crmProvinceCode = document.getElementById('crmProvinceCode').value
         const crmDistrictCode = document.getElementById('crmDistrictCode').value
         const crmSubdistrictCode = document.getElementById('crmSubdistrictCode').value
-
-        const cmoRptId = document.getElementById('cmoRptId').value
-        const cmoRepairAdditional = document.getElementById('cmoRptId').value
-        const cmoMoreOne = document.getElementById('cmoMoreOne').checked ? '1' : '0'
-        const cmoOfficeTel = document.getElementById('cmoOfficeTel').value
-
+        const crmFileContent = document.getElementById('crmFileContent')
+        const crmChannelId = document.getElementById('crmChannelId').value
+        const crmChannel = document.getElementById('crmFileContent').value
+        const crmOrganization = document.getElementById('crmOrganization').value
         let crmPerson = 1
         const radioButtons = document.getElementsByName('crmPerson')
         for (let i = 0; i < radioButtons.length; i++) {
@@ -463,7 +567,6 @@
             crmPerson = radioButtons[i].value
           }
         }
-
         const xhr = new XMLHttpRequest()
         xhr.open('POST', 'http://192.168.10.250/bpmws/BPMSaleOrderService?wsdl')
         xhr.setRequestHeader('Content-Type', 'text/xml;charset=UTF-8')
@@ -471,68 +574,84 @@
           '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bpm="http://bpmws/">' +
           '<soapenv:Header/>' +
           '<soapenv:Body>' +
-          '<bpm:BPM_TargetApplication_AddRegisterCmOnline>' +
+          '<bpm:BPM_TargetApplication_AddSerialCustomer>' +
           '<!--Optional:-->' +
-          '<crmCmOnlineBean>' +
-          '<!--Optional:-->' +
-          '<cmoAddressNo>' +
+          '<crmCustomerBean>' +
+          '<crmAddressNo>' +
           crmAddressNo +
-          '</cmoAddressNo>' +
-          '<cmoDistrictCode>' +
+          '</crmAddressNo>' +
+          '<crmChannel>' +
+          crmChannel +
+          '</crmChannel>' +
+          '<crmChannelId>' +
+          crmChannelId +
+          '</crmChannelId>' +
+          '<crmDistrictCode>' +
           crmDistrictCode +
-          '</cmoDistrictCode>' +
-          '<cmoEmail>' +
+          '</crmDistrictCode>' +
+          '<crmEmail>' +
           crmEmail +
-          '</cmoEmail>' +
-          '<cmoModelId>' +
+          '</crmEmail>' +
+          '<crmFileName>' +
+          crmFileContent.files[0].name +
+          '</crmFileName>' +
+          '<crmFilePath>' +
+          crmFileContent.value +
+          '</crmFilePath>' +
+          '<crmFileTmpName>' +
+          crmFileContent.value +
+          '</crmFileTmpName>' +
+          '<crmFileContent>' +
+          crmFileContent.files[0].type +
+          '</crmFileContent>' +
+          '<crmModelId>' +
           crmModelId +
-          '</cmoModelId>' +
-          '<cmoMoreOne>' +
-          cmoMoreOne +
-          '</cmoMoreOne>' +
-          '<cmoNameTh>' +
+          '</crmModelId>' +
+          '<crmNameTh>' +
           crmNameTh +
-          '</cmoNameTh>' +
-          '<cmoOfficeTel>' +
-          cmoOfficeTel +
-          '</cmoOfficeTel>' +
-          // '<cmoOpnion>1,2,4</cmoOpnion>' +
-          // '<cmoOrganization>test222</cmoOrganization>' +
-          '<cmoPerson>' +
+          '</crmNameTh>' +
+          '<crmOrganization>' +
+          crmOrganization +
+          '</crmOrganization>' +
+          '<crmPerson>' +
           crmPerson +
-          '</cmoPerson>' +
-          '<cmoPostalCode>' +
+          '</crmPerson>' +
+          '<crmPostalCode>' +
           crmPostalCode +
-          '</cmoPostalCode>' +
-          '<cmoProvinceCode>' +
+          '</crmPostalCode>' +
+          '<crmProvinceCode>' +
           crmProvinceCode +
-          '</cmoProvinceCode>' +
-          '<cmoRepairAdditional>' +
-          cmoRepairAdditional +
-          '</cmoRepairAdditional>' +
-          '<cmoRoad>' +
+          '</crmProvinceCode>' +
+          '<crmPurchaseDateStr>' +
+          crmPurchaseDateStr +
+          '</crmPurchaseDateStr>' +
+          // '<crmRemark>remark</crmRemark>' +
+          '<crmRoad>' +
           crmRoad +
-          '</cmoRoad>' +
-          '<cmoRptId>' +
-          cmoRptId +
-          '</cmoRptId>' +
-          '<cmoSerial>' +
+          '</crmRoad>' +
+          '<crmSerial>' +
           crmSerial +
-          '</cmoSerial>' +
-          '<cmoSoi>' +
+          '</crmSerial>' +
+          '<crmSoi>' +
           crmSoi +
-          '</cmoSoi>' +
-          '<cmoSubdistrictCode>' +
+          '</crmSoi>' +
+          '<crmSubdistrictCode>' +
           crmSubdistrictCode +
-          '</cmoSubdistrictCode>' +
-          '<cmoTel>' +
+          '</crmSubdistrictCode>' +
+          '<crmSurnameTh>' +
+          crmSurnameTh +
+          '</crmSurnameTh>' +
+          '<crmTel>' +
           crmTel +
-          '</cmoTel>' +
-          '<cmoVillage>' +
+          '</crmTel>' +
+          '<crmTitleId>' +
+          crmTitleId +
+          '</crmTitleId>' +
+          '<crmVillage>' +
           crmVillage +
-          '</cmoVillage>' +
-          '</crmCmOnlineBean>' +
-          '</bpm:BPM_TargetApplication_AddRegisterCmOnline>' +
+          '</crmVillage>' +
+          '</crmCustomerBean>' +
+          '</bpm:BPM_TargetApplication_AddSerialCustomer>' +
           '</soapenv:Body>' +
           '</soapenv:Envelope>'
 
@@ -559,6 +678,8 @@
           organizationField.style.display = 'none' // Hide
         }
       }
+
+      // Call the function on page load to set the correct initial state
       window.onload = toggleOrganizationField
     </script>
   </body>

@@ -8,7 +8,7 @@
       href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
     <title>Check cm online</title>
   </head>
   <body>
@@ -54,8 +54,8 @@
           '<bpm:BPM_TargetApplication_CheckCmSerial>' +
           '<!--Optional:-->' +
           '<serial>' +
-          '220704030530151' +
-          // serialNumber.value +
+          // '220704030530151' +
+          serialNumber.value +
           '</serial>' +
           '</bpm:BPM_TargetApplication_CheckCmSerial>' +
           '</soapenv:Body>' +
@@ -74,32 +74,32 @@
             const groupTypeTitle = {
               PP: {
                 name: 'ทีมช่างเข้าบริการ',
-                activeImg: '../src/svg/engineer-worker-svgrepo-com.svg',
-                inactiveImg: '../src/svg/engineer-worker-svgrepo-com-dot.svg',
+                activeImg: '../svg/engineer-worker-svgrepo-com.svg',
+                inactiveImg: '../svg/engineer-worker-svgrepo-com-dot.svg',
                 position: 0,
               },
               PS: {
                 name: 'รอเสนอราคา',
-                activeImg: '../src/svg/invoice-bill-svgrepo-com.svg',
-                inactiveImg: '../src/svg/invoice-bill-svgrepo-com-dot.svg',
+                activeImg: '../svg/invoice-bill-svgrepo-com.svg',
+                inactiveImg: '../svg/invoice-bill-svgrepo-com-dot.svg',
                 position: 1,
               },
               PC: {
                 name: 'อยู่ในขั้นตอนการซ่อม',
-                activeImg: '../src/svg/fix-fixing-phone-svgrepo-com.svg',
-                inactiveImg: '../src/svg/fix-fixing-phone-svgrepo-com-dot.svg',
+                activeImg: '../svg/fix-fixing-phone-svgrepo-com.svg',
+                inactiveImg: '../svg/fix-fixing-phone-svgrepo-com-dot.svg',
                 position: 2,
               },
               PV: {
                 name: 'กําลังดําเนินการส่งสินค้า',
-                activeImg: '../src/svg/truck-thin-svgrepo-com.svg',
-                inactiveImg: '../src/svg/truck-thin-svgrepo-com-dot.svg',
+                activeImg: '../svg/truck-thin-svgrepo-com.svg',
+                inactiveImg: '../svg/truck-thin-svgrepo-com-dot.svg',
                 position: 3,
               },
               S: {
                 name: 'เสร็จสิ้น',
-                activeImg: '../src/svg/badge-reward-svgrepo-com.svg',
-                inactiveImg: '../src/svg/badge-reward-svgrepo-com-dot.svg',
+                activeImg: '../svg/badge-reward-svgrepo-com.svg',
+                inactiveImg: '../svg/badge-reward-svgrepo-com-dot.svg',
                 position: 4,
               },
             }
